@@ -8,6 +8,7 @@ public class StrTest {
 			chars[i-48]=(char) i;
 		}
 		System.out.println(chars);
+		int o=chars.length;
 	}
 
 }
