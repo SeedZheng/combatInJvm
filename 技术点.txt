@@ -40,7 +40,13 @@ acquire方法会像非公平锁一样首先调用tryAcquire插队试试（如果
 	ptr(指向monitor对象的指针) 30位       							                           ,10(重量级锁)   2位 共32位
 14.偏向锁：如果不存在锁竞争，则取消之前已经取得锁的线程同步操作，当该线程再次请求这个锁时，无需再进行同步操作，
    如果此时有其他锁进入，则偏向锁取消，JVM中使用 -XX:+UseBiasedLocking 启用偏向锁
-	
+15.锁的一般过程
+	偏向锁--如果有锁竞争-->轻量级锁--BasicLock地址复制到MarkWord失败(加锁失败)-->尝试自旋锁-
+	-自旋若干次仍未获得锁(锁竞争很激烈的情况下会发生)-->重量级锁
+16.使用new关键字实例化对象时，会实例化他自己和他的父类
+17.在引用一个字段时，只有该字段所属的类会被初始化
+18.使用子类引用父类的一个字段时，子类只会被加载，不会被初始化，父类会被初始化
+19.引用final字段时，该字段所属的类不会被初始化
 	
 	
 换算关系
@@ -65,4 +71,31 @@ JVM参数详解：
  -server server模式启动
  -XX:+UseBiasedLocking 启用偏向锁
  -XX:BiasedLockingStartupDelay 虚拟机启动后，立即启动偏向锁
+ -XX:+UseSpining 开启自旋锁(1.7以后失效)
+ -XX:PreBlockSpin=50 设置自旋锁自旋次数(1.7以后失效)
+ -XX:+TraceClassLoading 跟踪类初始化情况
  
+ 
+ 
+
+ 
+class文件描述
+u1，u2和u4，分别代表了1、2和4个字节的无符号数
+ClassFile { 
+    u4 magic; 
+    u2 minor_version; 
+    u2 major_version; 
+    u2 constant_pool_count; 
+    cp_info constant_pool[constant_pool_count-1]; 
+    u2 access_flags; 
+    u2 this_class; 
+    u2 super_class; 
+    u2 interfaces_count; 
+    u2 interfaces[interfaces_count]; 
+    u2 fields_count; 
+    field_info fields[fields_count]; 
+    u2 methods_count; 
+    method_info methods[methods_count]; 
+    u2 attributes_count; 
+    attribute_info attributes[attributes_count]; 
+}
